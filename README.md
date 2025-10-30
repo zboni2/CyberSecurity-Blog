@@ -1,0 +1,49 @@
+# Cybersecurity Blog
+
+A personal blog documenting cybersecurity writeups, tutorials, and insights. This blog serves as a knowledge base for various cybersecurity topics, including CTF walkthroughs, security research, and practical security guides, basically everything I learned by myself building this blog and about cybersecurity in general. This functions somewhat as part of my portfolio.
+
+## 🌟 Features
+
+- **CTF Writeups**: Detailed walkthroughs of various Capture The Flag challenges
+- **Security Tutorials**: Step-by-step guides on security concepts and tools
+- **Phishing Awareness**: Educational content on identifying and preventing phishing attacks
+- **Responsive Design**: Optimized for both desktop and mobile devices
+- **Dark/Light Mode**: Toggle between themes for comfortable reading
+
+## 🚀 Technologies Used
+
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Styling**: Custom CSS with CSS Variables for theming
+- **Hosting**: GitHub Pages
+
+## 📚 Table of Contents
+
+- [Earth CTF Walkthrough](EarthCTF.html) - A detailed guide on solving the "Earth" machine from VulnHub's Planets series
+- [Spotting Phishing Emails](spotPhish.html) - Learn how to identify and avoid phishing attempts
+- [Phishing Detection Guide](detectPhish.html) - Comprehensive guide on detecting phishing attempts
+
+## 🛠️ Setup & Deployment
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/CybersecurityBlog.git
+   ```
+
+2. Open any HTML file in your browser to view locally
+
+3. To deploy on GitHub Pages:
+   - Go to Repository Settings > Pages
+   - Select the `main` branch and `root` folder
+   - Save to deploy
+
+## 🤝 Contributing
+
+Contributions are welcome! If you find any issues or want to add new content, feel free to open a pull request.
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+🔒 **Note**: This blog is for educational purposes only. The techniques and tools discussed should only be used on systems you own or have explicit permission to test.

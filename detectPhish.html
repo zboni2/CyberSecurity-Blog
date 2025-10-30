@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Detection Guide</title>
+    <link rel="stylesheet" href="stylesPhish.css">
+</head>
+<body>
+    <div class="container">
+        <div class="lang-toggle">
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                <span class="theme-icon">🌙</span> Dark Mode
+            </button>
+            <div class="lang-buttons">
+                <button onclick="switchLang('en')" id="btn-en" class="active">ENG</button>
+                <button onclick="switchLang('de')" id="btn-de">GER</button>
+            </div>
+        </div>
+
+        <!-- English Content -->
+        <div id="content-en">
+            <header>
+                <div class="fish-icon">🎣</div>
+                <h1>Spotting Phishing</h1>
+            </header>
+
+            <div class="intro">
+                <p><strong>Recognizing phishing attempts is essential</strong> to safeguard your personal data from online criminals. Phishing messages are designed to deceive you into revealing sensitive details like passwords, banking information, and other confidential data.</p>
+                
+                <p>Cybercriminals frequently masquerade as legitimate organizations, making these fraudulent messages challenging to identify. Succumbing to a phishing scam can result in serious repercussions, including stolen identity, monetary loss, and compromised access to your personal or work accounts.</p>
+                
+                <p>Learning to recognize and flag phishing attempts is vital for protecting yourself and your workplace from digital threats. Common warning signs of phishing messages include:</p>
+            </div>
+
+            <div class="indicators">
+                <div class="indicator">
+                    <h3><span class="indicator-number">1</span> Questionable Sender Details</h3>
+                    <p>Phishing messages frequently originate from addresses that appear authentic but include subtle misspellings or additional characters.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">2</span> Generic or Impersonal Salutations</h3>
+                    <p>Fraudulent emails typically use broad greetings such as "Valued User" rather than addressing you personally.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">3</span> Urgent or Intimidating Wording</h3>
+                    <p>Scammers frequently create artificial urgency, claiming your account will be suspended or immediate action is required to address a problem.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">4</span> Suspicious Files or Hyperlinks</h3>
+                    <p>Phishing attempts may include unexpected attachments or links. Always verify a link's destination by hovering before clicking.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">5</span> Requests for Confidential Data</h3>
+                    <p>Reputable companies will never request sensitive information such as passwords, credit card numbers, or social security details via email. If the sender wants you to share this type of data through email, it's definitely a phishing attempt.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">6</span> Poor Writing Quality</h3>
+                    <p>Many phishing messages display obvious spelling errors and grammatical mistakes that are rare in legitimate professional correspondence.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">7</span> Inconsistent Web Addresses</h3>
+                    <p>A phishing email might contain URLs that don't align with the displayed text, or they could redirect you to a completely different site than stated.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">8</span> Email Spoofing</h3>
+                    <p>Attackers often forge the sender's address to appear as a trusted source. Always verify the sender's email domain and be cautious of emails that don't pass SPF, DKIM, or DMARC checks.</p>
+                </div>
+            </div>
+
+            <footer>
+                <p>Understanding these red flags will help you avoid becoming a victim of phishing schemes.</p>
+                <p><span class="highlight">Master phishing detection – and you'll never take the bait!</span></p>
+            </footer>
+        </div>
+
+        <!-- German Content -->
+        <div id="content-de" class="hidden">
+            <header>
+                <div class="fish-icon">🎣</div>
+                <h1>Phishing Erkennen</h1>
+            </header>
+
+            <div class="intro">
+                <p><strong>Die Fähigkeit, Phishing-Angriffe zu identifizieren, ist unerlässlich</strong>, um Ihre persönlichen Daten vor Cyberkriminellen zu schützen. Phishing-Nachrichten zielen darauf ab, Sie zur Preisgabe sensibler Informationen wie Passwörter, Bankdaten und andere vertrauliche Details zu verleiten.</p>
+                
+                <p>Cyberkriminelle geben sich häufig als vertrauenswürdige Organisationen aus, wodurch diese betrügerischen Nachrichten schwer zu erkennen sind. Auf einen Phishing-Angriff hereinzufallen kann schwerwiegende Folgen haben, darunter Identitätsdiebstahl, finanzielle Verluste und unbefugter Zugriff auf persönliche oder geschäftliche Konten.</p>
+                
+                <p>Das Erkennen und Melden von Phishing-Versuchen ist entscheidend, um sich selbst und Ihr Unternehmen vor Cyberangriffen zu schützen. Wichtige Anzeichen für Phishing-Nachrichten sind:</p>
+            </div>
+
+            <div class="indicators">
+                <div class="indicator">
+                    <h3><span class="indicator-number">1</span> Verdächtige Absenderadressen</h3>
+                    <p>Phishing-Nachrichten stammen oft von Adressen, die echt aussehen, aber subtile Rechtschreibfehler oder zusätzliche Zeichen enthalten.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">2</span> Allgemeine oder Unpersönliche Anreden</h3>
+                    <p>Betrügerische E-Mails verwenden typischerweise breite Begrüßungen wie „Geschätzter Kunde" anstatt Sie persönlich anzusprechen.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">3</span> Dringende oder Bedrohliche Formulierungen</h3>
+                    <p>Betrüger erzeugen häufig künstliche Dringlichkeit und behaupten, Ihr Konto werde gesperrt oder sofortiges Handeln sei erforderlich, um ein Problem zu beheben.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">4</span> Verdächtige Dateien oder Links</h3>
+                    <p>Phishing-Versuche können unerwartete Anhänge oder Links enthalten. Überprüfen Sie immer das Ziel eines Links, indem Sie mit der Maus darüber fahren, bevor Sie klicken.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">5</span> Anfragen nach Vertraulichen Daten</h3>
+                    <p>Seriöse Unternehmen fordern niemals sensible Informationen wie Passwörter, Kreditkartennummern oder Sozialversicherungsdaten per E-Mail an. Wenn der Absender möchte, dass Sie diese Art von Daten per E-Mail teilen, handelt es sich definitiv um einen Phishing-Versuch.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">6</span> Schlechte Schreibqualität</h3>
+                    <p>Viele Phishing-Nachrichten weisen offensichtliche Rechtschreib- und Grammatikfehler auf, die in legitimer professioneller Korrespondenz selten sind.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">7</span> Inkonsistente Webadressen</h3>
+                    <p>Eine Phishing-E-Mail kann URLs enthalten, die nicht mit dem angezeigten Text übereinstimmen, oder sie könnten Sie auf eine völlig andere Website weiterleiten als angegeben.</p>
+                </div>
+
+                <div class="indicator">
+                    <h3><span class="indicator-number">8</span> E-Mail-Spoofing</h3>
+                    <p>Angreifer fälschen häufig die Absenderadresse, um als vertrauenswürdige Quelle zu erscheinen. Überprüfen Sie immer die Domain des Absenders und seien Sie vorsichtig bei E-Mails, die die SPF-, DKIM- oder DMARC-Überprüfungen nicht bestehen.</p>
+                </div>
+            </div>
+
+            <footer>
+                <p>Das Verstehen dieser Warnsignale hilft Ihnen, nicht Opfer von Phishing-Betrügereien zu werden.</p>
+                <p><span class="highlight">Beherrschen Sie die Phishing-Erkennung – und Sie werden niemals anbeißen!</span></p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle Functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = themeToggle.querySelector('.theme-icon');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                themeToggle.innerHTML = themeIcon.outerHTML + ' Dark Mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+                themeToggle.innerHTML = themeIcon.outerHTML + ' Light Mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Initialize theme from localStorage or prefer-color-scheme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = themeToggle.querySelector('.theme-icon');
+            
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+                themeToggle.innerHTML = themeIcon.outerHTML + ' Light Mode';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                themeToggle.innerHTML = themeIcon.outerHTML + ' Dark Mode';
+            }
+        }
+
+        // Language Toggle Functionality
+        function switchLang(lang) {
+            // Hide all content divs
+            document.querySelectorAll('[id^="content-"]').forEach(div => {
+                div.classList.add('hidden');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.lang-buttons button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected language content and set active button
+            document.getElementById('content-' + lang).classList.remove('hidden');
+            document.getElementById('btn-' + lang).classList.add('active');
+            
+            // Save preference to localStorage
+            localStorage.setItem('preferredLang', lang);
+        }
+        
+        // Initialize theme and language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            // Add event listener to theme toggle button
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+            
+            // Check for saved language preference
+            const savedLang = localStorage.getItem('preferredLang') || 'en';
+            switchLang(savedLang);
+        });
+    </script>
+</body>
+</html>

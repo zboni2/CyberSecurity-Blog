@@ -1,0 +1,579 @@
+/* External links */
+.external-link {
+    color: #4CAF50;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px dashed #4CAF50;
+    padding: 0 2px;
+    transition: all 0.2s ease;
+}
+
+.external-link:hover {
+    color: #81c784;
+    border-bottom-style: solid;
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+/* Base styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.5;
+    color: #e0e0e0;
+    background-color: #1a1a1a;
+    margin: 0 auto;
+    padding: 0 2rem;
+    max-width: 1200px;
+}
+
+/* Header styles */
+header {
+    background: #1a1a1a;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #2e7d32;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.nav-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.2rem;
+}
+
+.nav-links a {
+    color: #e0e0e0;
+    text-decoration: none;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    border-radius: 3px;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: #4CAF50;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.nav-links a.active {
+    border-bottom: 2px solid #4CAF50;
+}
+
+/* Media / screenshots */
+.screenshot {
+    margin: 1.5rem auto;
+    text-align: center;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.screenshot img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #3a3a3a;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    display: block;
+    margin: 0 auto;
+    object-fit: contain; /* Ensures aspect ratio is maintained */
+}
+
+.screenshot figcaption {
+    color: #a0a0a0;
+    font-size: 0.85em;
+    margin-top: 0.6rem;
+    line-height: 1.4;
+    max-width: 80%;
+    text-align: center;
+}
+
+/* Modal styles for expanded images */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    text-align: center;
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+}
+
+#caption {
+    margin: 15px auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 30px;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Make screenshots look clickable */
+.screenshot {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.screenshot:hover {
+    opacity: 0.8;
+}
+
+/* Main content */
+main {
+    width: 100%;
+    margin: 2rem auto;
+    padding: 0;
+}
+
+.writeup {
+    background: #1e1e1e;
+    border-radius: 6px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    line-height: 1.5;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.writeup-header {
+    margin: 0 0 1.5em 0;
+    line-height: 1.8;
+    text-align: justify;
+    hyphens: auto;
+}
+
+.metadata {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.metadata-details {
+    display: flex;
+    gap: 1rem;
+    color: #a0a0a0;
+    font-size: 0.9rem;
+}
+
+.author {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.author a {
+    color: #cf4747;
+    text-decoration: underline;
+    transition: color 0.3s;
+    padding: 0 2px;
+}
+
+.author a:hover {
+    color: #4CAF50;
+}
+
+.content-section {
+    margin-bottom: 0;
+    padding: 1.2rem;
+    background: #252525;
+    border-radius: 0;
+}
+
+/* First content section connects to TOC */
+.content-section:first-of-type {
+    margin-top: 0;
+    border-radius: 0;
+}
+
+/* Last content section gets bottom border radius */
+.content-section:last-of-type {
+    border-radius: 0 0 5px 5px;
+    margin-bottom: 1.5rem;
+}
+
+.content-section:last-child {
+    border-bottom: none;
+}
+
+.content-section h3 {
+    font-size: 1.3rem;
+    color: #4CAF50;
+    margin: 1.5rem 0 0.8rem 0;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #e0e0e0;
+    line-height: 1.3;
+    font-weight: 600;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #4CAF50;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.8rem;
+    color: #4CAF50;
+    padding-bottom: 0.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+h3 {
+    margin: 2rem 0 1rem;
+    font-size: 1.5rem;
+}
+
+h4 {
+    margin: 1.8rem 0 0.8rem;
+    font-size: 1.3rem;
+}
+
+h5, h6 {
+    margin: 1.5rem 0 0.7rem;
+    font-size: 1.1rem;
+}
+
+/* Introduction Section */
+.intro-section {
+    background: #252525;
+    padding: 1.2rem;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.intro-section h3 {
+    margin: 0 0 1.2rem 0;
+    color: #4CAF50;
+    font-size: 1.2rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.intro-section h4 {
+    color: #4CAF50;
+    margin: 1.5rem 0 0.8rem 0;
+    font-size: 1.1rem;
+}
+
+.intro-section ul {
+    margin: 0.8rem 0;
+    padding-left: 1.5rem;
+}
+
+.intro-section li {
+    margin: 0.4rem 0;
+}
+
+.intro-section .vm-info {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1.2rem 0;
+    border-left: 3px solid #4CAF50;
+}
+
+.intro-section .vm-info p {
+    margin: 0.5rem 0;
+}
+
+.intro-section .disclaimer {
+    background: rgba(76, 175, 80, 0.1);
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1.2rem 0 0 0;
+    border-left: 3px solid #4CAF50;
+}
+
+.intro-section .disclaimer p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Table of Contents and Tools List */
+.toc, .tools-list {
+    background: #252525;
+    border: none;
+    border-radius: 0;
+    padding: 1.2rem;
+    margin: 0;
+    box-shadow: none;
+}
+
+.toc h3, .tools-list h3 {
+    margin: 0 0 1.2rem 0;
+    color: #4CAF50;
+    font-size: 1.2rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.toc h4, .tools-list h4 {
+    color: #4CAF50;
+    margin: 1.5rem 0 0.8rem 0;
+    font-size: 1.2rem;
+}
+
+.toc ol {
+    counter-reset: item;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.toc > ol > li {
+    margin: 0.8rem 0;
+}
+
+/* Main list items */
+.toc > ol > li {
+    margin: 0.8rem 0;
+    padding-left: 0;
+}
+
+/* Nested lists */
+.toc ol ol {
+    margin: 0.3rem 0 0 1.8rem; /* Increased left margin for better indentation */
+    padding-left: 0.5rem; /* Add some padding to the left of sub-items */
+}
+
+.toc li {
+    position: relative;
+    counter-increment: item;
+    line-height: 1.5;
+    min-height: 1.8em;
+    display: block; /* Changed from flex to block for better alignment */
+}
+
+/* Remove bottom margin from the last sub-item */
+.toc ol ol li:last-child {
+    margin-bottom: 0;
+}
+
+/* Number styling */
+.toc li:before {
+    content: counters(item, ".") ".";
+    color: #4CAF50;
+    font-weight: bold;
+    margin-right: 0.5rem;
+    position: relative;
+    display: inline-block;
+    width: auto;
+    text-align: left;
+}
+
+/* Ensure proper alignment of sub-items */
+.toc ol ol li:before {
+    min-width: 2.5em;
+    text-align: left;
+    margin-right: 0.3rem;
+}
+
+.toc a {
+    color: #e0e0e0;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    flex: 1;
+    margin-left: -0.3rem;
+}
+
+.toc a:hover {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    transform: translateX(5px);
+}
+
+/* Align nested items properly */
+.toc ol ol li:before {
+    min-width: 2.5em;
+    margin-right: 0.3rem;
+}
+
+/* Tools List */
+.tools-list {
+    background: #252525;
+    border: none;
+    border-radius: 0;
+    padding: 1.2rem;
+    margin: 0;
+    box-shadow: none;
+}
+
+.tools-list h3 {
+    margin: 0 0 1.2rem 0;
+    color: #4CAF50;
+    font-size: 1.2rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.tools-list ul {
+    list-style-type: none;
+    padding-left: 0.5rem;
+    margin: 0.3rem 0 1.2rem 0;
+}
+
+.tools-list li {
+    margin: 0.4rem 0;
+    padding: 0.3rem 0.5rem;
+    background: rgba(76, 175, 80, 0.08);
+    border-left: 2px solid #4CAF50;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+}
+
+.tools-list li:hover {
+    background: rgba(76, 175, 80, 0.12);
+}
+
+.tools-list code {
+    color: #4CAF50;
+    background: rgba(76, 175, 80, 0.1);
+    padding: 0.2rem 0.4rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    margin-right: 0.5rem;
+    font-weight: 600;
+    border-radius: 2px;
+}
+
+.tools-list .tool-desc {
+    color: #b0b0b0;
+    font-size: 0.9em;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.tools-list .tool-category {
+    color: #4CAF50;
+    font-weight: 600;
+    margin: 1.2rem 0 0.8rem 0;
+    font-size: 1rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    background: rgba(76, 175, 80, 0.1);
+    display: inline-block;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Code blocks */
+.code-block {
+    background: #000;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+}
+
+pre {
+    margin: 0;
+}
+
+code {
+    color: #4CAF50;
+    font-family: 'Courier New', monospace;
+    background: rgba(76, 175, 80, 0.1);
+    padding: 0.1rem 0.3rem;
+    border-radius: 2px;
+}
+
+/* Technical terms styling */
+.tech-term {
+    color: #4CAF50;
+    font-style: italic;
+    font-family: 'Courier New', monospace;
+}
+
+/* Author page specific styles */
+.author-profile {
+    background: #2c2c2c;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.author-bio {
+    color: #a0a0a0;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    line-height: 1.6;
+}
+
+.writeup-grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.writeup-grid .writeup h3 a {
+    color: #4CAF50;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.writeup-grid .writeup h3 a:hover {
+    color: #81c784;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 2rem;
+    background: #1e1e1e;
+    color: #a0a0a0;
+    margin-top: 4rem;
+    border-top: 1px solid #2e7d32;
+}
