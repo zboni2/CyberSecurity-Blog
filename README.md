@@ -22,20 +22,6 @@ A personal blog documenting cybersecurity writeups, tutorials, and insights. Thi
 - [Spotting Phishing Emails](spotPhish.html) - Learn how to identify and avoid phishing attempts
 - [Phishing Detection Guide](detectPhish.html) - Comprehensive guide on detecting phishing attempts
 
-## 🛠️ Setup & Deployment
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/YOUR-USERNAME/CybersecurityBlog.git
-   ```
-
-2. Open any HTML file in your browser to view locally
-
-3. To deploy on GitHub Pages:
-   - Go to Repository Settings > Pages
-   - Select the `main` branch and `root` folder
-   - Save to deploy
-
 ## 🤝 Contributing
 
 Contributions are welcome! If you find any issues or want to add new content, feel free to open a pull request.
