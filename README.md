@@ -5,6 +5,7 @@ A personal blog documenting cybersecurity writeups, tutorials, and insights. Thi
 ## 📚 Table of Contents
 
 - [Earth CTF Walkthrough](EarthCTF.html) - A detailed guide on solving the "Earth" machine from VulnHub's Planets series
+- [VirtualBox Hacking Lab](dhcpVB.html) - Step-by-step guide to setting up a VirtualBox environment with internal networking and DHCP
 - [Phishing Detection Guide](detectPhish.html) - Comprehensive guide on detecting phishing attempts
 
 ## 🌟 Features
