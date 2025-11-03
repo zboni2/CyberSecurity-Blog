@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Setting Up a Local Hacking Lab with VirtualBox</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-content">
+                <h1>Cybersecurity Blog</h1>
+                <div class="nav-links">
+                    <a href="index.html" class="active">Home</a>
+                    <a href="EarthCTF.html">CTF Writeups</a>
+                    <a href="detectPhish.html">Phishing Guide</a>
+                    <a href="#">About</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <article class="writeup">
+            <div class="writeup-header">
+                <h2>Setting Up a Local Hacking Lab with VirtualBox</h2>
+                <div class="metadata">
+                    <span class="author"><a href="author.html">Written by Altin Hajdini</a></span>
+                    <div class="metadata-details">
+                        <span class="date">November 2, 2025</span>
+                        <span class="read-time">5 min read</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="writeup-content">
+                <section class="intro">
+                    <p>Creating a secure, isolated hacking lab is essential for practicing penetration testing, working on TryHackMe challenges, or learning cybersecurity in a safe environment. This guide will show you how to set up your own local network within VirtualBox, completely isolated from your host system.</p>
+                </section>
+
+                <section id="prerequisites" class="content-section">
+                    <h3>Prerequisites</h3>
+                    <ul>
+                        <li>Windows operating system</li>
+                        <li>Oracle VirtualBox installed</li>
+                        <li>At least two virtual machines (e.g., Kali Linux and a target VM)</li>
+                    </ul>
+                </section>
+
+                <section id="setup-process" class="content-section">
+                    <h3>Setting Up the Internal Network</h3>
+                    
+                    <h4>Step 1: Open Command Prompt as Administrator</h4>
+                    <p>Press <code>Windows + X</code> and select "Windows Terminal (Admin)" or "Command Prompt (Admin)"</p>
+                    
+                    <h4>Step 2: Navigate to VirtualBox Directory</h4>
+                    <p>Run the following command to change to the VirtualBox installation directory:</p>
+                    <div class="code-block">
+                        <pre><code>cd "C:\Program Files\Oracle\VirtualBox"</code></pre>
+                    </div>
+
+                    <h4>Step 3: Create a DHCP Server</h4>
+                    <p>Execute the following command to set up a DHCP server for your internal network:</p>
+                    <div class="code-block">
+                        <pre><code>vboxmanage dhcpserver add --network="godofwar" --server-ip="10.21.0.1" --lower-ip="10.21.0.100" --upper-ip="10.21.0.110" --netmask="255.255.255.0" --enable</code></pre>
+                    </div>
+                    
+                    <div class="note">
+                        <h5>Command Breakdown:</h5>
+                        <ul>
+                            <li><code>--network="godofwar"</code>: Name of your internal network</li>
+                            <li><code>--server-ip="10.21.0.1"</code>: IP address that will act as the router</li>
+                            <li><code>--lower-ip="10.21.0.100"</code>: Starting IP in the DHCP range</li>
+                            <li><code>--upper-ip="10.21.0.110"</code>: Ending IP in the DHCP range</li>
+                            <li><code>--netmask="255.255.255.0"</code>: Subnet mask for the network</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="configure-vms" class="content-section">
+                    <h3>Configuring Virtual Machines</h3>
+                    
+                    <h4>For each VM (Kali Linux and Target VM):</h4>
+                    <ol>
+                        <li>Right-click on the VM and select <strong>Settings</strong></li>
+                        <li>Go to <strong>Network</strong> settings</li>
+                        <li>Under <strong>Adapter 1</strong>, change "Attached to:" to <strong>Internal Network</strong></li>
+                        <li>In the dropdown, select the network name you created (e.g., "HackLabNet")</li>
+                        <li>Click <strong>OK</strong> to save the settings</li>
+                    </ol>
+                    
+                    <div class="screenshot">
+                        <img src="assets/vboxNetwork.png" alt="VirtualBox Network Settings">
+                        <figcaption>VirtualBox Network Settings Configuration</figcaption>
+                    </div>
+                </section>
+
+                <section id="verification" class="content-section">
+                    <h3>Verifying the Setup</h3>
+                    
+                    <h4>1. Start both VMs</h4>
+                    <p>Boot up your Kali Linux and target VMs. They should automatically receive IP addresses from the DHCP server.</p>
+                    
+                    <h4>2. Check Network Connectivity</h4>
+                    <p>In Kali Linux, open a terminal and run:</p>
+                    <pre><code>ip a</code></pre>
+                    <p>You should see an IP address in the range you specified (e.g., 10.21.0.100-110).</p>
+                    
+                    <h4>3. Test Connection Between VMs</h4>
+                    <p>From Kali Linux, try to ping your target VM:</p>
+                    <pre><code>ping 10.21.0.101</code></pre>
+                </section>
+
+                <section id="benefits" class="content-section">
+                    <h3>Benefits of This Setup</h3>
+                    <ul>
+                        <li><strong>Isolated Environment</strong>: Your hacking lab is completely separated from your host system and the internet</li>
+                        <li><strong>Safe for Testing</strong>: No risk of accidentally scanning or attacking real networks</li>
+                        <li><strong>Consistent Network</strong>: IP addresses remain the same between reboots</li>
+                        <li><strong>No Internet Required</strong>: Work on your lab even without an internet connection</li>
+                    </ul>
+                </section>
+
+                <section id="troubleshooting" class="content-section">
+                    <h3>Troubleshooting</h3>
+                    
+                    <h4>No IP Address Assigned</h4>
+                    <p>If your VMs don't get an IP address:</p>
+                    <ol>
+                        <li>Verify the DHCP server is running: <code>vboxmanage list dhcpservers</code></li>
+                        <li>Check the network adapter settings in VirtualBox</li>
+                        <li>Try restarting the VMs</li>
+                    </ol>
+                    
+                    <div class="screenshot">
+                        <img src="assets/troubleDHCP.png" alt="Troubleshooting DHCP Issues">
+                        <figcaption>Common DHCP issues and their solutions</figcaption>
+                    </div>
+                    
+                    <h4>Cannot Ping Between VMs</h4>
+                    <ul>
+                        <li>Ensure both VMs are on the same internal network</li>
+                        <li>Check the firewall settings on both VMs</li>
+                        <li>Verify the network adapter is enabled in the VM settings</li>
+                    </ul>
+                </section>
+
+                <section id="conclusion" class="content-section">
+                    <h3>Conclusion</h3>
+                    <p>You've successfully created an isolated hacking lab environment using VirtualBox's internal networking. This setup is perfect for practicing penetration testing, working on CTF challenges, or learning about network security in a safe, controlled environment. Remember to always use these skills ethically and legally.</p>
+                    
+                    <div class="cta">
+                        <p>Ready to test your new lab? Try out some TryHackMe rooms or set up your own vulnerable machines to practice on!</p>
+                    </div>
+                </section>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Cybersecurity Blog</p>
+    </footer>
+
+</body>
+</html>

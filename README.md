@@ -2,10 +2,6 @@
 
 A personal blog documenting cybersecurity writeups, tutorials, and insights. This blog serves as a knowledge base for various cybersecurity topics, including CTF walkthroughs, security research, and practical security guides, basically everything I learned by myself building this blog and about cybersecurity in general. This functions somewhat as part of my portfolio.
 
-## 🌐 Live Site
-
-**Visit the blog**: [https://zboni2.github.io/CyberSecurity-Blog/](https://zboni2.github.io/CyberSecurity-Blog/)
-
 ## 📚 Table of Contents
 
 - [Earth CTF Walkthrough](EarthCTF.html) - A detailed guide on solving the "Earth" machine from VulnHub's Planets series
