@@ -249,9 +249,91 @@ h2, h3 {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .container {
         border-radius: 0;
+        padding: 1.5rem;
+    }
+    
+    .nav-content {
+        padding: 0.5rem 1rem;
+    }
+    
+    .nav-links {
+        gap: 0.5rem;
+    }
+    
+    .nav-links a {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.9rem;
+    }
+    
+    h1 {
+        font-size: 1.7rem !important;
+        margin: 1.2rem 0 !important;
+    }
+    
+    h2 {
+        font-size: 1.4rem !important;
+        margin: 1.2rem 0 0.8rem !important;
+    }
+    
+    .indicator {
+        padding: 0.8rem;
+    }
+    
+    .indicator-number {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+        line-height: 28px;
+    }
+    
+    .indicator p {
+        margin-left: 36px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .nav-links a {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.85rem;
+    }
+    
+    h1 {
+        font-size: 1.5rem !important;
+        margin: 1rem 0 0.8rem !important;
+    }
+    
+    h2 {
+        font-size: 1.3rem !important;
+        margin: 1rem 0 0.7rem !important;
+    }
+    
+    .indicator {
+        padding: 0.7rem 0.8rem;
+    }
+    
+    .indicator p {
+        margin-left: 32px;
+        font-size: 0.9rem;
+    }
+    
+    .indicator-number {
+        width: 26px;
+        height: 26px;
+        font-size: 0.85rem;
+        line-height: 26px;
     }
     
     .indicators {
